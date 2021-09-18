@@ -1,46 +1,14 @@
-# Getting Started with Create React App
+# React で入力フォームをリストとして表示する場合のレンダリングのパフォーマンス向上方法
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 問題点
 
-## Available Scripts
+- 入力フォームの値を配列として State で管理して入力フォームの値が変更された時のハンドラーを共通化した場合、ハンドラーは配列に依存するため Object.is()での比較が常に false になり入力のたびに再計算される
+- ハンドラーが再計算されるとハンドラーに依存する共通のリスト要素のコンポーネントが再レンダリングされてしまう
+- 値の変更がなかったフォームも 1 文字入力するたびに再レンダリングされてしまうため入力が遅くなるなどパフォーマンスに悪影響を及ぼす
+- 単純にハンドラーの変更を無視するように変更すると他のフォームのハンドラーが参照する State は古い状態のものなので他のフォームで入力時に古い State をもとに値が更新されて再レンダリングされてしまう
 
-In the project directory, you can run:
+## 解決策
 
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 入力フォームのフォーカス状態を別途 State として管理する
+- 共通のリスト要素のコンポーネントをメモ化してハンドラーの変更があった場合に再レンダリングされないように React.memo の第二引数の比較処理をカスタマイズしてハンドラーの判定を除外する
+- フォーカス状態に変更があった場合は共通のリスト要素のコンポーネントを再レンダリングすることでハンドラーから最新の State を参照できるようにする
