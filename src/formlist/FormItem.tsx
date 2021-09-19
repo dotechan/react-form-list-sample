@@ -8,9 +8,6 @@ type Props = {
     label: string,
     event: React.ChangeEvent<HTMLInputElement>
   ) => void;
-  isFocusing: boolean;
-  handleFocus: (event: React.FocusEvent<HTMLInputElement>) => void;
-  handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 /**
@@ -31,12 +28,12 @@ function propsAreEqual(prevProps: Props, nextProps: Props): boolean {
   return (
     prevDispData.label === nextDispData.label &&
     prevDispData.value === nextDispData.value &&
-    prevProps.isFocusing === nextProps.isFocusing
+    prevProps.handleChangeValue === nextProps.handleChangeValue
   );
 }
 
 const FormItem: React.VFC<Props> = React.memo((props: Props) => {
-  const { displayFormData, handleChangeValue, handleFocus, handleBlur } = props;
+  const { displayFormData, handleChangeValue } = props;
   return (
     <form>
       <label>
@@ -46,8 +43,6 @@ const FormItem: React.VFC<Props> = React.memo((props: Props) => {
           type="text"
           value={displayFormData.value}
           onChange={(e) => handleChangeValue(displayFormData.label, e)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
         />
       </label>
     </form>

@@ -36,23 +36,24 @@ export function useFormList(
 
   const handleChangeValue = React.useCallback(
     (label: string, event: React.ChangeEvent<HTMLInputElement>) => {
-      const updateDisplayFormDataList = displayFormDataList.map(
-        (formData: DisplayFormData) => {
-          if (formData.label === label) {
-            return {
-              id: formData.label,
-              label: formData.label,
-              value: event.target.value,
-            };
-          } else {
-            return formData;
+      setDisplayFormDataList((prevState: DisplayFormData[]) => {
+        const updateDisplayFormDataList = prevState.map(
+          (formData: DisplayFormData) => {
+            if (formData.label === label) {
+              return {
+                id: formData.label,
+                label: formData.label,
+                value: event.target.value,
+              };
+            } else {
+              return formData;
+            }
           }
-        }
-      );
-
-      setDisplayFormDataList(updateDisplayFormDataList);
+        );
+        return updateDisplayFormDataList;
+      });
     },
-    [displayFormDataList]
+    [setDisplayFormDataList]
   );
 
   const handleFocus = React.useCallback(

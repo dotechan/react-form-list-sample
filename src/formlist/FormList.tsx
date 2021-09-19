@@ -9,13 +9,9 @@ type Props = {
 };
 
 const FormList: React.VFC<Props> = (props: Props) => {
-  const [
-    displayFormDataList,
-    handleChangeValue,
-    isFocusing,
-    handleFocus,
-    handleBlur,
-  ] = useFormList(props.formDataList);
+  const [displayFormDataList, handleChangeValue] = useFormList(
+    props.formDataList
+  );
 
   return (
     <div>
@@ -31,9 +27,6 @@ const FormList: React.VFC<Props> = (props: Props) => {
             key={formData.label}
             displayFormData={formData}
             handleChangeValue={handleChangeValue}
-            isFocusing={isFocusing}
-            handleFocus={handleFocus}
-            handleBlur={handleBlur}
           />
         );
       })}
